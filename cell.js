@@ -1,20 +1,23 @@
 
 class Cell{
   constructor( game, loc, id){
-    this.game = game;       // the global instance
-    this.loc = loc;     // top left pixel location
+    this.game = game;     
+    this.loc = loc;     
     this.center = vector2d(loc.x+(game.w)/2, loc.y+(game.w)/2);
     this.color = 'pink';
     this.id = id;
     this.neighbors = [];
     this.occupied = false;
-    this.parent = 0;  //  this is the parent cell
+    this.wall = false;
+    this.parent = 0;  
     this.dist = -1;
     this.angle=0;
     this.vec = null;
     this.hasTower = false;
-    //this.image =
-  //  this.wallImage;
+  }
+
+  getGridPos () {
+    return new Vector2d(Math.floor(this.center.x / this.game.w), Math.floor(this.center.y / this.game.w));
   }
 
     // render() --
@@ -23,7 +26,7 @@ class Cell{
     let ctx = this.game.context;
     ctx.strokeStyle = 'white';
  //   ctx.strokeRect(this.loc.x, this.loc.y, this.game.w, this.game.w);
-    if(this.occupied) {
+    if(this.wall) {
         ctx.drawImage(bsImage, Cell.wallImage.x, Cell.wallImage.y, Cell.wallImage.w, Cell.wallImage.h, this.loc.x, this.loc.y, this.game.w, this.game.w);
         }
     else if(this == this.game.root) {
@@ -38,31 +41,18 @@ class Cell{
       }
 
 
-    // draw vector
-    // if(this.vec && !this.occupied){
-    //   this.game.context.beginPath();
-    //   this.game.context.moveTo(this.center.x, this.center.y);
-    //   this.game.context.lineTo(this.center.x + this.vec.x, this.center.y + this.vec.y);
-    //   this.game.context.stroke();
-    //
-    // }
+    
 
-  //  this.getText();
+
   }
 
-    // addNeighbors()
-    // Find all the neighbors of this cell that exist and are not occupied
-    // and do not have a tower.
-    // Diagonal neighbors must not be blocked diagonally.
-    // For example, a southeast neighbor might not be occupied
-    // but if east and south are both occupied then southeast is blocked
-    // and not considered to be a neighbor.
+
 
   addNeighbors(game, grid){
-    this.neighbors = [];    // start with empty neighbors
+    this.neighbors = [];    
     let col = this.loc.x/game.w;
     let row = this.loc.y/game.w;
-    let n,ne,e,se,s,sw,w,nw = null; // all eight neighbors
+    let n,ne,e,se,s,sw,w,nw = null; 
 
     if(row > 0 ){
           n = grid[col][row-1];
@@ -110,7 +100,7 @@ class Cell{
         }
   }
 
-    // Return a vector from this cell to its parent
+    
   getVector(){
     if(this.parent) {
         let dx = this.parent.loc.x - this.loc.x;
@@ -130,7 +120,7 @@ class Cell{
     context.fillText(""+this.dist, this.loc.x+.2*this.game.w/2, this.loc.y+this.game.w/2 - 5);
     context.fillStyle = "black";
     context.fillText(""+this.id, this.loc.x+.2*this.game.w/2, this.loc.y+this.game.w/2 +15);
-    //if(this.vec) context.fillText(""+this.vec.toString(), this.loc.x+.2*this.game.w/2, this.loc.y+this.game.w/2 +15);
+   
 
     context.restore();
   }

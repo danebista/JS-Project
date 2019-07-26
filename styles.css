@@ -24,10 +24,7 @@ body{
 }
 #sliderDiv{
 
-  position: fixed;
  
-  top:15%;
-  right:-3%;
   width:200px;
   height:750px;
 }
@@ -37,13 +34,11 @@ body{
   height:100px;
   text-align:center;
 }
-
-#fastForward:hover{
-  background-color: #6666ff;
-}
-
-#pauseButton:hover{
-  background-color: #6666ff;
+#fastForward{
+  background-image: url(./resources/images/bg/fast.png);
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  cursor: pointer;
 }
 
 .loader {
@@ -70,15 +65,28 @@ body{
 }
 
 #canDiv{
-  background-color: lightgreen;
+  background-color:black;
+  background-size: cover;
   width:900px;
   height:750px;
   border:4px solid black;
   float:left;
 }
 
+
 #pauseButton{
-  background-color: #999999;
+  width:80px;
+  height:60px;
+  border-radius:50%;
+  float:left;
+  margin-left:4%;
+  margin-top:10px;
+  padding-top:15px;
+  font-family:Arial;
+  font-size: 18px;
+  background-image:url(./resources/images/bg/pause.png);
+  background-repeat: no-repeat;
+  background-position: 48% 50%;
 }
 
 #pauseButton:hover{
@@ -107,9 +115,32 @@ body{
   background-repeat: no-repeat;
   background-position: 50% 30%;
 }
-.infoTileDiv span{
-  color:rgba(0,0,0,0);
+#alarm{
+  background-image: url(./resources/images/bg/alarm.png);
+  background-repeat: no-repeat;
+  background-position: 50% 30%;
 }
+#score{
+  background-image: url(./resources/images/bg/score.png);
+  background-repeat: no-repeat;
+  background-position: 50% 30%;
+}
+#health{
+  background-image: url(./resources/images/bg/health.png);
+  background-repeat: no-repeat;
+  background-position: 50% 30%;
+}
+.infoTileDiv.costBut{
+  background-image: url(./resources/images/bg/cost.png);
+  background-repeat: no-repeat;
+  background-position: 50% 30%;
+}
+
+.infoTileDiv span{
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10pt;
+}
+
 
 .menuTileDiv{
   background-color: #DDD;
@@ -150,15 +181,26 @@ body{
      border:none;
      padding:0!important;
      font: inherit;
-     /*border is optional*/
+     
      border-bottom:1px solid #444;
      cursor: pointer;
 }
 html {
-  transform: scale(.70);
-  -webkit-transform: scale(.70);
-  -moz-transform: scale(.70);
-  -ms-transform: scale(.70);
-  -o-transform: scale(.70);
+  transform: scale(.80);
+  -webkit-transform: scale(.80);
+  -moz-transform: scale(.80);
+  -ms-transform: scale(.80);
+  -o-transform: scale(.80);
+
+}
+
+@media screen and (min-width: 900px){
+
+  #sliderDiv{
+    position: fixed;
+ 
+    top:5%;
+    left: 100%;
+  }
 
 }

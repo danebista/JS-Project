@@ -85,7 +85,7 @@ var panelJSON= [{
 },{
   name: "Instruction Panel",
   id: "instructionPanel",
-  pic: "resources/images/panels/panel.png",
+  pic: "resources/images/panels/pan1.png",
   picId: "pan",
   buttonJSON: [
     {
@@ -120,7 +120,8 @@ var panelJSON= [{
       picId: "exit",
       funk: function(){
         document.getElementById("endPanel").parentNode.removeChild(document.getElementById("endPanel"))
-          towerGame.level.panelQuit = new Panel(towerGame, 2)
+        towerGame.level.panelQuit = new Panel(towerGame, 2) 
+       
       }
     },{
       name: "Credits Button",

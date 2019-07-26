@@ -1,6 +1,6 @@
 'use strict'
 
-// wait for the window to load and than call back setup()
+
 window.addEventListener('load', loadImages, false);
 
 var towerGame;   // the global game object
@@ -10,21 +10,13 @@ var cellId = 0;
 var bsImage;
 var ssImage;
 var portHole;
+var explosion;
 var load = document.getElementById('loader');
 var wrap;
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++slider
+
 var sliderDiv = document.createElement('div');
 sliderDiv.setAttribute('id', 'sliderDiv');
-document.body.appendChild(sliderDiv);
-/*
-var slider1 = document.createElement('input');
-slider1.setAttribute('type', 'range');
-slider1.setAttribute('min', '0');
-slider1.setAttribute('max', '1000');
-slider1.setAttribute('id', 'slider1');
 
-sliderDiv.appendChild(slider1); */
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  function loadImages(){
    bsImage = new Image();
    bsImage.src = "resources/images/spritesheets/buttons.png";
@@ -32,6 +24,8 @@ sliderDiv.appendChild(slider1); */
    ssImage.src = "resources/images/spritesheets/sprites2.png";
    portHole=new Image();
    portHole.src="resources/images/bg/porthole.png";
+   explosion=new Image();
+   explosion.src="resources/images/bg/explode.png";
    window.setTimeout(setup, 1500);
  }
 function setup() {
@@ -40,22 +34,24 @@ function setup() {
   wrap.style.display = 'block';
 
   towerGame = new Game();
-  window.setTimeout(draw, 100);    // wait 100ms for resources to load then start draw loop
+  
+  wrap.appendChild(sliderDiv);
+  window.setTimeout(draw, 100);    
 
-  //panelthings
+
 
 }
 
-function draw() {   // the animation loop
+function draw() { 
     towerGame.run();
-    //console.clear();
-    window.setTimeout(draw, 1000/FRAME_RATE);  // come back here every interval
+
+    window.setTimeout(draw, 1000/FRAME_RATE);
 }
 
-// Game is the top level object and it contains the levels
+
 class Game {
-  //  This is a test
-  constructor() { // from setup()
+
+  constructor() {
     this.isRunning = true;
     this.placingTower = false;
     this.currentTower = 0;
@@ -72,7 +68,7 @@ class Game {
     this.costSlidersText = [];
     this.explosiveBullets = [];
     this.explosiveBullets = [];
-    this.bankIncValue;
+    this.bankIncValue=50;
     this.textBankInc;
     this.bankValue = 500;
     this.rays = [];
@@ -121,13 +117,11 @@ class Game {
 
     window.onkeydown = function (e) {
         var code = e.keyCode ? e.keyCode : e.which;
-        if (code === 38) { //up key
-          //console.clear();
-          //console.log("Basic Tower: " + slider1.value);
+        if (code === 38) { 
         }
     };
 
-  //  this.enemyData = [];
+ 
       this.loadWallImage();
     this.level= new Level1(this)
 
@@ -135,7 +129,6 @@ class Game {
 
 
 
-    // containerarrays for cells
     this.grid = [];
     this.cols = Math.floor(this.canvas.width / this.w);
     this.rows = Math.floor(this.canvas.height / this.w);
@@ -150,12 +143,23 @@ class Game {
 
     var fastForwardButton = document.getElementById('fastForward');
     fastForwardButton.addEventListener('click', function(){
+
       if (FRAME_RATE == 30){
         FRAME_RATE = 60;
-        fastForwardButton.innerHTML = "Slow Down";
+        fastForwardButton.style.background=`none`;
+        fastForwardButton.style.backgroundColor=`#fff`;
+        fastForwardButton.style.cursor=`pointer`;
+        fastForwardButton.style.backgroundImage=`url(./resources/images/bg/slow.png)`;
+        fastForwardButton.style.backgroundRepeat=`no-repeat`;
+        fastForwardButton.style.backgroundPosition=`50% 50%`;
       } else {
-        fastForwardButton.innerHTML = "Fast Forward";
-        FRAME_RATE = 30;
+        FRAME_RATE=30;
+        fastForwardButton.style.background=`none`;
+        fastForwardButton.style.backgroundColor=`#fff`;
+        fastForwardButton.style.cursor=`pointer`;
+        fastForwardButton.style.backgroundImage=`url(./resources/images/bg/fast.png)`;
+        fastForwardButton.style.backgroundRepeat=`no-repeat`;
+        fastForwardButton.style.backgroundPosition=`50% 50%`;
       }
     },false);
   }
@@ -177,24 +181,19 @@ class Game {
     for (var i = 1; i <= 5; i++){
       var propName = "E" + i + "0000";
       var f = jsonx.frames[propName].frame;
-    //  this.enemyData.push(f);
-    //  console.log(f);
-  //  enemyData.push(createImageBitmap(ssImage, f.x, f.y, f.w, f.h));
-    //console.log(f);
+   
+ 
     this.enDa.push(f);
-  //  enDa.push(f);
+
     }
 
 
    }
 
 
-  // The success callback when a tower canvas image
-  // or bullet image has loaded.  Hide them from
-  // displaying on the page.
   hideImgElement() { this.style.display = "none"; }
 
-  run() { // called from draw()
+  run() { 
 
     if (!this.paused){
     this.level.run()
@@ -209,8 +208,20 @@ class Game {
   pause(){
     var butt = document.getElementById('pauseButton');
   towerGame.paused = !towerGame.paused;
-  if (towerGame.paused) butt.innerHTML = "Play";
-  if (!towerGame.paused) butt.innerHTML = "Pause";
+  if (towerGame.paused){
+     butt.style.background=`none`;
+     butt.style.backgroundColor=`#fff`;
+     butt.style.backgroundImage=`url(./resources/images/bg/playb.png)`;
+     butt.style.backgroundRepeat=`no-repeat`;
+     butt.style.backgroundPosition=`48% 50%`;
+  } 
+  if (!towerGame.paused){
+     butt.style.background=`none`;
+     butt.style.backgroundColor=`#fff`;
+     butt.style.backgroundImage=`url(./resources/images/bg/pause.png)`;
+     butt.style.backgroundRepeat=`no-repeat`;
+     butt.style.backgroundPosition=`48% 50%`;
+  }
 }
 
 
@@ -220,63 +231,48 @@ class Game {
 
   }
 
-      // brushfire()
-    // starting with the 'root' cell, which is the bottom right cell of the grid
-    // assign a "distance" to all other cells where the distance is the
-    // accumulated steps from that cell to the root cell.
-    // An adjacent neighbor has a step of 10
-    // and a diagonal neighbor has a step of 14.
+      
 
-  brushfire(undo) { //if brushfire fails to make a valid map undo will be called
-    // Initialize each cell in the grid to have a distance that
-    // is the greatest possible.  Initialize each cell to
-    // have no parent and populate it's array of neighbors
+  brushfire(undo) { 
     for(var i = 0; i < this.cols; i++){
       for(var j = 0; j < this.rows; j++){
         var cell = this.grid[i][j];
-        cell.dist = this.cols * this.rows * 10;     // set distance to max
-        cell.vec = null;    // clear parent vector
-        cell.parent = 0;    // clear parent
-        cell.addNeighbors(this,  this.grid); // fill the neighbors array
+        cell.dist = this.cols * this.rows * 10;   
+        cell.vec = null;   
+        cell.parent = 0;   
+        cell.addNeighbors(this,  this.grid); 
       }
     }
-    // Initialize the fifo queue with the root cell
+   
     this.root.dist = 0;
-    this.root.occupied = false; // in case it was randomly set occupied
+    this.root.occupied = false; 
     var queue = [this.root];
 
-    // loop as long as the queue is not empty, removing the first cell
-    // in the queue and adding all its neighbors to the end of the
-    // queue.  The neighbors will only be those that are not occupied
-    // and not blocked diagonally.
     while(queue.length) {
-        var current = queue.shift();   // remove the first cell from the queue
-        // for all its neighbors...
+        var current = queue.shift();  
         for(let j =0; j < current.neighbors.length; j++){
             let neighbor = current.neighbors[j];
-            var dist = current.dist+10; // adjacent neighbors have a distance of 10
+            var dist = current.dist+10; 
             if(current.loc.x != neighbor.loc.x && current.loc.y != neighbor.loc.y)
-                dist = current.dist+14; // diagonal neighbors have a distance of 14
-            // if this neighbor has not already been assigned a distance
-            // or we now have a shorter distance, give it a distance
-            // and a parent and push to the end of the queue.
+                dist = current.dist+14; 
+          
             if(neighbor.dist > dist) {
                 neighbor.parent = current;
                 neighbor.dist = dist;
                 queue.push(neighbor);
                 }
-          }     // for each neighbor
-        }   // while(queue.length)
+          }     
+        }  
     if(!this.validMap()){
       if(undo){
           undo()
           this.brushfire()
       }else{
-        // delete any enemy that is currently in a cell without a parent
+      
         for(let i = 0; i < this.enemies.length;  i++) {
             let enemy = towerGame.enemies[i];
             if(!enemy.currentCell.parent)
-                enemy.kill = true;    // kill the orphans
+                enemy.kill = true;   
             }
             console.log("brushfire created an invalid map and no undo was inputed")
 
@@ -284,18 +280,10 @@ class Game {
     }
 
 
-        // give each cell a vector that points to its parent
-//       for(var i = 0; i < this.cols; i++){
-//         for(var j = 0; j < this.rows; j++){
-//           this.grid[i][j].vec = this.grid[i][j].getVector();
-//         }
-//       }
-
     }
-    //check the map to see if there are cells without parents
     validMap() {
       for (var k=0;k<=9;k++){
-        if(this.grid[0][k].occupied || this.grid[0][k].hasTower){
+        if(this.grid[0][k].wall || this.grid[0][k].hasTower){
           return false;
       }
       }
@@ -311,7 +299,7 @@ class Game {
         return true;
       }
     
-    //undo an invalid map action
+    
     undo(cell,tower) {
       if(tower){
         return function() {
@@ -323,6 +311,14 @@ class Game {
         return function() {
           if (cell.occupied){
             cell.occupied = false;
+            cell.wall = false;
+            let gPos = cell.getGridPos();
+            if(towerGame.grid[gPos.x][gPos.y - 1] && !towerGame.grid[gPos.x][gPos.y - 1].wall && towerGame.grid[gPos.x][gPos.y - 1].occupied){
+              towerGame.grid[gPos.x][gPos.y - 1].occupied = false;
+            }
+            if(towerGame.grid[gPos.x][gPos.y + 1] && !towerGame.grid[gPos.x][gPos.y + 1].wall && towerGame.grid[gPos.x][gPos.y + 1].occupied){
+              towerGame.grid[gPos.x][gPos.y + 1].occupied = false;
+            }
             towerGame.bankValue += towerGame.wallCost;
           } else {
             cell.occupied = true;
@@ -332,26 +328,18 @@ class Game {
         }
       }
     }
-    // sendEnemies()
-    // Send a random number of enemies, up to 5, each from a random location
-    // in the top half of the grid.  About half of the enemies will take the
-    // optimal path simply by following the parent chain and about half will
-    // take a path of randomly choosing cells to be next on the path
-    // from all those cells with a distance to the root that is
-    // less than its current location.
-    // A valid cell to start the enemy must have a parent because lack
-    // of a parent means either it is occupied or it is blocked from any path.
+
     sendEnemies() {
-        var numEnemies = Math.random() * 5;     // up to 5 enemies
+        var numEnemies = Math.random() * 5;     
         var row, col, startCell, i, j;
         for( i = 0; i < numEnemies; i++) {
-            for(j = 0; j < 3; j++) { // try 3 times to find valid start cell
+            for(j = 0; j < 3; j++) { 
                 startCell = this.grid[0][0];
-                if(startCell && startCell.parent)   // must have a parent to have any path
+                if(startCell && startCell.parent)
                     break;
                 }
-            if(j < 3) { // if we found a valid cell to start the enemy
-                let randomPath = Math.floor(Math.random() * 2);    // about half
+            if(j < 3) { 
+                let randomPath = Math.floor(Math.random() * 2);   
                 this.enemies.push(new Enemy(this, startCell, randomPath));
                 }
             }
@@ -364,11 +352,11 @@ class Game {
         this.wave.run()
       }
     }
-    // Delete any enemies that have died
+  
     removeEnemies() {
       for(let i = this.enemies.length-1; i >= 0; i--) {
         if(this.enemies[i].kill)
-            this.enemies.splice(i,1);   // delete this dead enemy
+            this.enemies.splice(i,1); 
 
         }
     }
@@ -390,7 +378,6 @@ class Game {
     let infoElements = document.getElementById('infoDiv').getElementsByClassName('infoTileDiv');
     for(let i = 0; i < infoElements.length-1; i++){
       let info = infoElements[i];
-      // change the html content after condition--use indexOf
       if(i==0){
         info.innerHTML = '<br/>';
         var value = document.createElement('p');
@@ -401,14 +388,14 @@ class Game {
           this.bankValue == 0;
         }
       }else if(i==2){
-        info.innerHTML = 'Time <br/>';
+        info.innerHTML = '<br/>';
         var value = document.createElement('p');
         value.style.fontSize = '12pt';
         value.innerHTML = time;
         info.appendChild(value);
       }
       if(i==3){
-        info.innerHTML = 'Score <br/>';
+        info.innerHTML = '<br/>';
         var value = document.createElement('p');
         value.style.fontSize = '12pt';
         value.innerHTML = this.score;
@@ -422,7 +409,7 @@ class Game {
         info.appendChild(value);
       }
       if(i==4){
-        info.innerHTML = 'Health <br/>';
+        info.innerHTML = '<br/>';
         var value = document.createElement('p');
         value.style.fontSize = '12pt';
         value.innerHTML = this.health;
@@ -433,7 +420,12 @@ class Game {
   updateCostInfoElement(value) {
   let infoElements = document.getElementById('infoDiv').getElementsByClassName('infoTileDiv');
   let info = infoElements[infoElements.length-3];
-  info.innerHTML = 'Cost <br/> <br/>' + value;
+  info.style.backgroundImage=`url(./resources/images/bg/cost.png)`;
+  info.style.backgroundRepeat=`no-repeat`;
+  info.style.backgroundPosition=`50% 30%`;
+  info.style.fontFamily=`Game-Font`;
+  info.innerHTML = '<br/> <br/>' + value;
+  
   }
 
   updateGameTime(){
@@ -445,9 +437,8 @@ class Game {
     return this.gameTime;
   }
 
-   // +++++++++++++++++++++++++++++++++++++++++++  load a 2D array with cells
   loadGrid(){
-    for(var i = 0; i < this.cols; i++){     // columns of rows
+    for(var i = 0; i < this.cols; i++){    
       this.grid[i] = [];
       for(var j = 0; j < this.rows; j++){
         this.grid[i][j] = new Cell(this, vector2d((i*this.w), (j*this.w)), ++cellId);
@@ -455,12 +446,11 @@ class Game {
       }
     }
 
-  }  // ++++++++++++++++++++++++++++++++++++++++++++++  End LoadGrid
+  }  
 
   createTowerBitmaps(ssImage, mtd, index){
       if (!ssImage || !bsImage.complete){
           alert("Images not loaded");
-          // quit code
       }
       var propertyName = "T" + (index+1) + "0000";
       var frame = jsonx.frames[propertyName].frame;
@@ -476,10 +466,6 @@ class Game {
     console.log("Tower1 Shoot Speed: " + slider1.value);
   }
 
-  // Create the divs to hold the menu of towers with
-  // the large images.  This divs also contain the
-  // parameters for creating towers to be drawn on the
-  // canvas.
   createFireRateSilder(){
     var towers = [];
     for(var i = 0; i < 4; i++){
@@ -626,12 +612,12 @@ class Game {
   createTileDivs(){
     var tiles = [];
     var buttons = ["B10000", "B20000", "B30000", "B40000", "B50000", "B60000"];
-    //  loop through the towers and DO NOT include wall element
+    
     for(var i = 0; i < 5; i++){
-      var mtd = document.createElement("div"); // createDiv("");
+      var mtd = document.createElement("div");
       if(i == 0){
       mtd.ability = "normal";
-      mtd.cost = this.costSliders[0].value;//200;
+      mtd.cost = this.costSliders[0].value;
 
     } else if(i == 1){
       mtd.ability = "fast";
@@ -665,8 +651,6 @@ class Game {
       document.getElementById("menuDiv").appendChild(mtd);
 
 
-  //    mtd.cost = 100*i +50;
-      mtd.setAttribute('title', 'Cost = '+mtd.cost);
       mtd.id = 'towImgDiv' + i;
       tiles.push(mtd);
       this.towersBankValuesARR.push(mtd);
@@ -680,29 +664,24 @@ class Game {
   getBankValue(){
     return this.bankValue;
   }
-  //  Logic to add tower +++++++++++++++++++++++
+
   canAddTower(cell) {
-    // add conditions before allowing user to place turret
-    // Some money required but also cannot place tower on a cell
-    // of the grid that is occupied or is the root cell
+
     if(towerGame.placingTower) {
-        if(!cell.occupied && !cell.hasTower && cell != towerGame.root){
+        if(!cell.wall && !cell.hasTower && cell != towerGame.root){
           return true;
         }
       return(false);
     }
   }
 
-  createTower(mtd) { // menu turret div
-    // create a new tower object and add to array list
-    // the menu tower div contains the parameters for the tower
-  //  console.log("Bankvalue = " + this.bankValue);
-  //  console.log("Cost = " + mtd.cost);
+  createTower(mtd) { 
+  
     if(this.bankValue >= mtd.cost){
       var tower = new Tower( mtd.cost, mtd.cnvTurImg, mtd.cnvBulImg, mtd.ability);
-    //  console.log(mtd.cnvTurImg);
+ 
       if(tower) {
-        this.towers.push(tower); // add tower to the end of the array of towers
+        this.towers.push(tower); 
         return(true);
         }
       else {
@@ -714,23 +693,15 @@ class Game {
   }
 
   placeTower(cell) {
-    //  place tower into play area at center of cell
+  
     towerGame.towers[towerGame.towers.length-1].loc = cell.center.copy();
-//    console.log(towerGame.towers[towerGame.towers.length-1].loc.toString());
-    //  tower needs to know if it is placed
     towerGame.towers[towerGame.towers.length-1].placed = true;
     cell.hasTower = true;
-    //  only one tower placed at a time
     towerGame.placingTower = false;
-    // placing a tower makes the cell containing the tower
-    // unavailable to enemies the same as if it were
-    // occupied (blocked)
-    towerGame.brushfire(towerGame.undo(cell,towerGame.towers[towerGame.towers.length-1]));   // all new distances and parents
+    towerGame.brushfire(towerGame.undo(cell,towerGame.towers[towerGame.towers.length-1]));  
   }
 
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ load callbacks
   loadDOMCallBacks(menuTiles) {
-    //  load tile menu callbacks
     for (var i = 0; i < menuTiles.length; i++) {
         var mtd = menuTiles[i];
         mtd.addEventListener('mouseover',this.tileRollOver,false);
@@ -741,7 +712,6 @@ class Game {
 
   }
 
-  //+++++++++++++++++++++++++   tile menu callbacks
   tileRollOver() {
     this.style.backgroundColor = '#f7e22a';
     towerGame.updateCostInfoElement(this.cost);
@@ -757,8 +727,6 @@ class Game {
   }
 
   tileClicked() {
-    //if user clicks tile and not placing tile change placing to true
-    // can add Tower checks cost and other conditions
     if(towerGame.placingTower === true) return;
     if(towerGame.createTower(this))
         towerGame.placingTower = true;
@@ -766,23 +734,20 @@ class Game {
 
 
   }
-//  ++++++++++++++++++++++++++++++++++++++++++++++++++    mouse handlers
   handleCNVMouseOver() {
     if(towerGame.towers.length < 1) return;
     towerGame.towers[towerGame.towers.length-1].visible = true;
   }
 
   handleCNVMouseMoved(event) {
-    // add some properties to the canvas to track the mouse.
     this.mouseX = event.offsetX;
     this.mouseY = event.offsetY;
     if(towerGame.towers.length < 1) return;
     if(!towerGame.towers[towerGame.towers.length-1].placed &&
       towerGame.placingTower === true ){
-        //follow mouse
+       
         towerGame.towers[towerGame.towers.length-1].loc.x = this.mouseX;
         towerGame.towers[towerGame.towers.length-1].loc.y = this.mouseY;
-//        console.log(this.mouseX + ", " + this.mouseY + ", " + towerGame.towers[towerGame.towers.length-1].loc.toString());
       }
   }
 
@@ -796,23 +761,30 @@ class Game {
     }
 
     else if(!towerGame.placingTower && !cell.hasTower) {
-        // toggle the occupied property of the clicked cell
-        if (!cell.occupied && towerGame.bankValue >= towerGame.wallCost){
+      
+        if (!cell.wall && towerGame.bankValue >= towerGame.wallCost){
             towerGame.bankValue -= towerGame.wallCost;
+            if(row > 0){
+              towerGame.grid[col][row - 1].occupied = true;
+            }
+            if(row < 14){
+              towerGame.grid[col][row + 1].occupied = true;
+            }
             cell.occupied = true;
-        } else if(!cell.occupied) {
+            cell.wall = true;
+        } else if(!cell.wall) {
             alert("Insufficient Funds!");
             }
         else {
             towerGame.bankValue += towerGame.wallCost;
             cell.occupied = false;
+            cell.wall = false;
         }
-        towerGame.brushfire(towerGame.undo(cell));   // all new distances and parents
+        towerGame.brushfire(towerGame.undo(cell));  
         }
   }
 
-  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  //collision detection utilities
+
   distance(c0, c1){
       this.x0 = c0.x;
       this.y0 = c0.y;
@@ -837,46 +809,22 @@ class Game {
       return value >= Math.min(min, max) && Math.max(min, max) <= Math.max(min, max);
     }
 
-  //parameters:
-  //loc1 = location vector of first circle
-  //loc2 = location vector of second circle
-  //rad1 = radius of first circle
-  //rad2 = radius of second circle
     circleCollision(loc1, loc2, rad1, rad2){
       if(this.distance(loc1, loc2) <= rad1 + rad2){
         return true;
       }
     }
 
-    //parameters:
-    //x, y = locations of point
-    //circx, circy = locations of circle
-    //radius = radius of circle
     circlePointCollision(x, y, circx, circy, radius){
       if(this.distanceXY(x, y, circx, circy) < radius){
         return true;
       }
     }
 
-    //parameters:
-    //x, y = locations of point
-    //loc = location vector of rectangle
-    //rect width, height = width and height of rectangle
-    rectanglePointCollision(x, y, loc, rectWidth, rectHeight){
-      if(this.inRange(x, loc.x, loc.x + rectWidth) && inRange(y, loc.y, loc.y + rectHeight)){
-        return true;
-      }
-    }
-
-
     range(min0, max0, min1, max1){
       return Math.max(min0, max0) >= Math.min(min1, max1) && Math.min(min0, max0) <= Math.max(min1, max1);
     }
 
-
-    //parameters:
-    //loc1 = location vector of first rectangle
-    //loc2 = location vector of second rectangle
     rectangleCollision(loc1, rectWidth1, rectHeight1, loc2, rectWidth2, rectHeight2){
       if(this.range(loc1.x, loc1.x + rectWidth1, loc2.x, loc2.x + rectWidth2) &&
       this.range(loc1.y, loc1.y + rectHeight1, loc2.y, loc2.y + rectHeight2)){
@@ -884,6 +832,6 @@ class Game {
   }
     }
 
-  //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Other
-} // end Game class +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+} 
 

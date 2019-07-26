@@ -1,7 +1,7 @@
 'use strict'
 
 class Tower {
-  // issue#1 use preloaded images
+  
   constructor( cost, tImg, bImg, ability) {
     this.loc = vector2d(0, 0);
     this.ability = ability;
@@ -34,7 +34,7 @@ class Tower {
     if(this.ability == "freeze"){
        this.coolDown = towerGame.fireSliders[2].value;
        console.log(towerGame.fireSliders[2].value); //2500
-       this.range = 500;
+       this.range = 200;
      }
      else if(this.ability == "normal"){
        this.coolDown = towerGame.fireSliders[0].value; //700

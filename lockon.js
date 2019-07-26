@@ -1,14 +1,12 @@
 class LockOn{
 
   constructor(locationOne, locationTwo){
-    // issue#1 use preloaded bullet image instead of loadImage
     this.loc = locationOne;
     this.targetLoc = locationTwo;
 
   }
 
   run(){
-    //console.log("running");
     this.render();
     this.update();
   }
@@ -21,12 +19,10 @@ class LockOn{
     ctx.strokeStyle = '#e806a7';
     ctx.stroke();
 
-
-    //ctx.restore();
   }
 
   update(){
 
 
   }
-}//  end Bullet class
+}

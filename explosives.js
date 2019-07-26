@@ -7,20 +7,22 @@ class Explosives{
     this.start = 5.0;
     this.radius = this.start;
     this.kills = false;
-
+    
+    
   }
 
   run(){
+    
     //console.log("running");
     this.render();
     this.update();
   }
   render(){
+
     var ctx = towerGame.context;
-    ctx.fillStyle = 'orange';
    // console.log(this.loc);
     ctx.beginPath();
-    if(this.radius <= 50){
+    if(this.radius <= 80){
      this.radius += 7;
      console.log("sss");
 
@@ -28,11 +30,12 @@ class Explosives{
 
       this.kills = true;
     }
-
-    ctx.ellipse(this.loc.x, this.loc.y, this.radius, this.radius, 0, 2*Math.PI, false);
+    ctx.drawImage(explosion,this.loc.x, this.loc.y, this.radius, this.radius);
     ctx.fill();
 
     ctx.restore();
+    
+
   }
 
   update(){

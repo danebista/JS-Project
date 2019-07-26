@@ -38,28 +38,74 @@ class Wave {
   }
     //parses JSON
     enemySelector(game,enemyJSON) {
-       // if we found a valid cell to start the enemy
-        //create an array of the arguments for the enemy class
         var args=[null,game].concat(enemyJSON.additionalEnemyArguments)
-        //apply the argument array to the specified enemy class
         var tempEnemy= enemyJSON.enemy.bind.apply(enemyJSON.enemy,args)
         return new tempEnemy
 
     }
 }
-//so yeah,theres stuff here
-//AllWaves is an array of waves. each wave has a name and a wave increment. the wave increment is the amount of time before a wave begins.
-//waves are seperated into packets. each packet specifies the enemy type, enemy increment, packet increment, and number of enemies.
-//enemyIncrement is amount of time between two enemy spawns. if enemy increment is less than 1, multiple enemies will spawn at the same time.
-//packetIncrement is the amount of time that must pass before the next packet can begin.
-//num is the number of enemies that will be spawned before the packet is over
-//enemy is a JSON object that specifes the exact type of enemy to be spawned and is parsed by the enemySelector function
-//enemy contains enemy, enemyPosition, and additionalEnemyArguments.
-//enemy within enemy specifies the enemy class to be called
-//enemyPosition is a 2d array that spefies the area in whicch an enemt will be randomly spawned
-//the numbers are formated as fractions of the total grid with the smaller number coming first
-//additionalEnemyArguments specifies any additional arguments that might be added to an enemy class
-AllWaves=[
+var classEnemies=[Enemy1,Enemy2,Enemy3,Enemy4,Enemy5];
+function WaveGenerator(Waver,n,classEnemies,number,enemyIncrement,packetIncrement,waveIncrement){
+  Waver.push({});
+  Waver[Waver.length-1].packets=[];
+  Waver[Waver.length-1].name=`wave ${Waver.length}`;
+  Waver[Waver.length-1].waveIncrement=waveIncrement;
+  for(var i=0;i<n;i++){
+   Waver[Waver.length-1].packets.push({});
+  }
+  for(var j=0;j<Waver[Waver.length-1].packets.length;j++){
+    Waver[Waver.length-1].packets[j].enemy={};
+    Waver[Waver.length-1].packets[j].enemy.enemy=classEnemies[j];
+    Waver[Waver.length-1].packets[j].enemy.additionalEnemyArguments=[1];
+    Waver[Waver.length-1].packets[j].num=number[j];
+    Waver[Waver.length-1].packets[j].enemyIncrement=enemyIncrement[j];
+    Waver[Waver.length-1].packets[j].packetIncrement=packetIncrement[j];
+  }
+}
+var AllWaves=[];
+var n=3;
+var n2=5;
+var number=[10,15,1],
+ number2=[10,1,3],
+ number3=[10,5,1],
+ number4=[1,1,1,1,1],
+ number5=[1,50,110,70,60],
+ number6=[66,660,60,660,6660],
+ number7=[1,500,500,1000,1000],
+ number8=[1000000,10000000,1000000,100000,10000000];
+var enemyIncrement=[1,1,1],
+  enemyIncrement2=[1,0.25,0.75],
+  enemyIncrement3=[10,5,1],
+  enemyIncrement4=[0.01,0.01,0.01,0.01,0.01],
+  enemyIncrement5=[0.05,0.25,0.2,0.2,0.2],
+  enemyIncrement6=[0.006,0.06,0.6,0.06,0.6],
+  enemyIncrement7=[0.07,0.005,0.7,0.005,0,005],
+  enemyIncrement8=[0.000001,0.000001,0.00001,0.000001,0.00001];
+var packetIncrement=[1,1,1],
+packetIncrement2=[0.01,0.01,0.01,0.01,0.01],
+packetIncrement3=[1,1,1,1,1],
+packetIncrement4=[2,2,2,3,3],
+packetIncrement5=[1,1,1,1,1];
+packetIncrement6=[1,1,1,1,1];
+var waveIncrement=3,
+    waveIncrement2=7,
+    waveIncrement3=6,
+    waveIncrement4=0,
+    waveIncrement5=10;
+
+WaveGenerator(AllWaves,n,classEnemies,number,enemyIncrement,packetIncrement,waveIncrement);
+WaveGenerator(AllWaves,n,classEnemies,number2,enemyIncrement2,packetIncrement,waveIncrement2);
+WaveGenerator(AllWaves,n,classEnemies,number3,enemyIncrement3,packetIncrement,waveIncrement2);
+WaveGenerator(AllWaves,n,classEnemies,number3,enemyIncrement,packetIncrement,waveIncrement3);
+WaveGenerator(AllWaves,n,classEnemies,number3,enemyIncrement3,packetIncrement,waveIncrement3);
+WaveGenerator(AllWaves,n,classEnemies,number3,enemyIncrement3,packetIncrement,waveIncrement3);
+WaveGenerator(AllWaves,n2,classEnemies,number4,enemyIncrement4,packetIncrement2,waveIncrement3);
+WaveGenerator(AllWaves,n2,classEnemies,number5,enemyIncrement5,packetIncrement3,waveIncrement4);
+WaveGenerator(AllWaves,n2,classEnemies,number6,enemyIncrement6,packetIncrement4,waveIncrement);
+WaveGenerator(AllWaves,n2,classEnemies,number7,enemyIncrement7,packetIncrement5,waveIncrement2);
+WaveGenerator(AllWaves,n2,classEnemies,number8,enemyIncrement8,packetIncrement5,waveIncrement5);
+
+/*AllWaves=[
   {
     "packets":[
       {
@@ -104,14 +150,6 @@ AllWaves=[
       {
         "enemy":{
           "enemy":Enemy1,
-          "enemyPosition":[
-            [
-              0,1
-            ],
-            [
-              0,.5
-            ]
-          ],
           "additionalEnemyArguments":[
             1
           ]
@@ -123,14 +161,6 @@ AllWaves=[
       {
         "enemy":{
           "enemy":Enemy3,
-          "enemyPosition":[
-            [
-              0,1
-            ],
-            [
-              0,.5
-            ]
-          ],
           "additionalEnemyArguments":[
             0
           ]
@@ -304,14 +334,6 @@ AllWaves=[
       {
         "enemy":{
           "enemy":Enemy1,
-          "enemyPosition":[
-            [
-              0,1
-            ],
-            [
-              0,.5
-            ]
-          ],
           "additionalEnemyArguments":[
             1
           ]
@@ -323,14 +345,6 @@ AllWaves=[
       {
         "enemy":{
           "enemy":Enemy2,
-          "enemyPosition":[
-            [
-              0,1
-            ],
-            [
-              0,.5
-            ]
-          ],
           "additionalEnemyArguments":[
             1
           ]
@@ -342,14 +356,6 @@ AllWaves=[
       {
         "enemy":{
           "enemy":Enemy3,
-          "enemyPosition":[
-            [
-              0,1
-            ],
-            [
-              0,.5
-            ]
-          ],
           "additionalEnemyArguments":[
             1
           ]
@@ -361,14 +367,6 @@ AllWaves=[
       {
         "enemy":{
           "enemy":Enemy4,
-          "enemyPosition":[
-            [
-              0,1
-            ],
-            [
-              0,.5
-            ]
-          ],
           "additionalEnemyArguments":[
             1
           ]
@@ -380,14 +378,6 @@ AllWaves=[
       {
         "enemy":{
           "enemy":Enemy5,
-          "enemyPosition":[
-            [
-              0,1
-            ],
-            [
-              0,.5
-            ]
-          ],
           "additionalEnemyArguments":[
             0
           ]
@@ -667,14 +657,6 @@ AllWaves=[
       {
         "enemy":{
           "enemy":Enemy5,
-          "enemyPosition":[
-            [
-              0,1
-            ],
-            [
-              0,1
-            ]
-          ],
           "additionalEnemyArguments":[
             1
           ]
@@ -686,14 +668,6 @@ AllWaves=[
       {
         "enemy":{
           "enemy":Enemy,
-          "enemyPosition":[
-            [
-              0,1
-            ],
-            [
-              0,.5
-            ]
-          ],
           "additionalEnemyArguments":[
             0
           ]
@@ -708,3 +682,4 @@ AllWaves=[
     "info":"this wave should always be the last wave"
   }
 ]
+*/

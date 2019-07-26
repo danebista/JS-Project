@@ -1,6 +1,5 @@
 'use strict'
 
-// The Level class contains most of the assets.
 class Level {
   constructor(game, number, canvas) {
 
@@ -10,7 +9,6 @@ class Level {
     this.init();
   }
   init() {
-    //lol
   }
 }
 class Level1 extends Level {
@@ -22,6 +20,7 @@ class Level1 extends Level {
     this.panelQuit = 0
   }
   run() {
+    this.game.render();
     if(this.panelStart){
       this.panelStart.render()
     }
@@ -34,7 +33,7 @@ class Level1 extends Level {
 class Level2 extends Level{
   constructor(game) {
     super(game,2)
-    this.game.canvas.canDiv.style.backgroundImage="url('resources/images/bg/play.png')"
+    this.game.canvas.canDiv.style.backgroundImage="url('resources/images/bg/star.gif')"
     this.game.health=100
     this.game.score=0
     this.game.bankValue = 500;
@@ -47,7 +46,8 @@ class Level2 extends Level{
     this.game.wave=new Wave(this.game,AllWaves[this.game.currentWaveNum]);
     this.game.cols = Math.floor(this.game.canvas.width / this.game.w);
     this.game.rows = Math.floor(this.game.canvas.height / this.game.w);
-    this.game.backgroundMusic = new Audio('resources/sounds/Elevator-music.mp3')
+    this.game.backgroundMusic = new Audio('resources/sounds/Elevator-music.wav')
+    this.game.backgroundMusic.volume=0.2;
     this.game.loadGrid();
     this.game.root = this.game.grid[this.game.cols - 1][this.game.rows -1];
     this.game.brushfire();
@@ -67,18 +67,16 @@ class Level2 extends Level{
       this.game.render();
     }
 
-    // draw the grid
     for(let i = 0; i < this.game.cols; i++){
       for(let j = 0; j < this.game.rows; j++){
         this.game.grid[i][j].render();
       }
     }
-    // draw the towers
+   
     for (let i = 0; i < this.game.towers.length; i++) {
       this.game.towers[i].run();
     }
     for (let i = 0; i < this.game.enemies.length; i++) {
-    //  console.log("game reading"  + this.game.enDa[1]);
       this.game.enemies[i].run();
     }
     for (let i = 0; i < this.game.bullets.length; i++) {
@@ -87,76 +85,61 @@ class Level2 extends Level{
     for (let i = 0; i < this.game.explosiveBullets.length; i++) {
       this.game.explosiveBullets[i].run();
       if(this.game.explosiveBullets[i].kills === true){
-        //this.game.explosiveBullets.splice(i, 0);
       }
       if(this.game.enemies.length === 0){
-        //this.game.explosiveBullets = [];
       }
     }
-
-    for (let i = 0; i < this.game.bullets.length; i++) {
-  //    this.game.lockon[i].run();
-    }
-
-
-
-    // some help text in the bottom left of the canvas
-    this.game.context.save();
-    this.game.context.fillStyle = "white";
-    this.game.context.font = "14px sans-serif";
-    this.game.context.restore();
-
-    //more panelthings
-    // if(this.game.panelStart){
-    //   this.game.panelStart.render()
-    // }
-    //
-    // if(this.game.panelInstructions){
-    //   this.game.panelInstructions.render()
-    // }
-    //
-    // if(this.game.panelQuit){
-    //   this.game.panelQuit.render()
-    // }
-
-    //collision detection
-   /* for(var i = this.game.enemies.length-1; i >= 0; i--){
-      for(var j = this.game.bullets.length-1; j >= 0; j--){
-        if(this.game.circlePointCollision(this.game.bullets[j].loc.x, this.game.bullets[j].loc.y, this.game.enemies[i].loc.x, this.game.enemies[i].loc.y, this.game.enemies[i].radius)){
-          //this.game.bullets.splice(j, 1);
-        //  this.game.enemies[i].kill = true;
-        //  this.game.score = this.game.score + 1;
-          if(this.game.score % 20 === 0){
-            //this.game.bankValue = this.game.bankValue + 10;
-          }
-        }
-      }
-    }
-  */
     if( this.game.health <= 0){
+     var highScore=JSON.parse(localStorage.getItem('highScores')) || 0;
+       if (this.game.score>=highScore){
+       localStorage.setItem('highScores',JSON.stringify(this.game.score));
+       highScore=this.game.score;
+    }
       this.game.canvas.canDiv.style.borderColor="black";
-      this.game.level=new Level3(this.game);
+      this.game.level=new Level3(this.game,this.game.score);
       this.game.backgroundMusic.pause();
     }
   }
 
 }
 class Level3 extends Level{
-  constructor(game) {
+  constructor(game,score) {
     super(game)
     this.game.enemies=[]
+    this.highScore=JSON.parse(localStorage.getItem('highScores')) || 0;
+    this.score=score || 0;
     this.game.canvas.canDiv.style.backgroundImage="url('resources/images/bg/end.png')"
+    this.ctx=this.game.context;
     this.panelQuit = new Panel(this, 2)
     this.panelCredits = 0
     this.panelStart = 0
   }
   run() {
-    this.game.render()
-    document.getElementById("infoDiv").getElementsByClassName("infoTileDiv")[4].innerHTML = ("Health </br>" + 0);    if(this.panelQuit){
-    this.panelQuit.render()
+    this.game.render();
+    this.drawScore();
+   
+    document.getElementById("infoDiv").getElementsByClassName("infoTileDiv")[4].innerHTML = ("</br></br>" + 0);    if(this.panelQuit){
+     this.panelQuit.render()
+    
     }
     if(this.panelCredits){
       this.panelCredits.render()
     }
+  }
+  drawScore(){
+    this.ctx.font="40px monospace"
+    this.ctx.fillStyle="#000"
+    var coordinates=70;
+    var coordinates1=560;
+    var coordinates2=320;
+    var coordinates3=560;
+    var coordinates4=70;
+    var coordinates5=620;
+    var coordinates6=290;
+    var coordinates7=620;
+    this.ctx.fillText("Your Score:",coordinates,coordinates1);
+    this.ctx.fillText(this.score,coordinates2,coordinates3);
+    this.ctx.fillText("HighScore:",coordinates4,coordinates5);
+    this.ctx.fillText(this.highScore,coordinates6,coordinates7);
   }
 }
